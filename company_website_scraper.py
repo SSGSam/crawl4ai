@@ -994,7 +994,7 @@ class CompanyWebsiteScraper:
                         )
 
                         # Crawl the website (streaming results)
-                        async for result in await crawler.arun(url=url, config=config):
+                        async for result in crawler.arun(url=url, config=config):
                             stats.total_pages_attempted += 1
 
                             if result.success:
@@ -1046,7 +1046,7 @@ class CompanyWebsiteScraper:
                         progress.update(task, completed=self.max_pages)
                 else:
                     # Non-verbose mode
-                    async for result in await crawler.arun(url=url, config=config):
+                    async for result in crawler.arun(url=url, config=config):
                         stats.total_pages_attempted += 1
 
                         if result.success:
