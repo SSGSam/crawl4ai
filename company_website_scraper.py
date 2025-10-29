@@ -995,7 +995,14 @@ class CompanyWebsiteScraper:
 
                         # Crawl the website and get all results
                         result_container = await crawler.arun(url=url, config=config)
-                        results = result_container.results if hasattr(result_container, 'results') else [result_container]
+
+                        # Handle different return types from arun()
+                        if isinstance(result_container, list):
+                            results = result_container
+                        elif hasattr(result_container, 'results'):
+                            results = result_container.results
+                        else:
+                            results = [result_container]
 
                         for result in results:
                             stats.total_pages_attempted += 1
@@ -1050,7 +1057,14 @@ class CompanyWebsiteScraper:
                 else:
                     # Non-verbose mode
                     result_container = await crawler.arun(url=url, config=config)
-                    results = result_container.results if hasattr(result_container, 'results') else [result_container]
+
+                    # Handle different return types from arun()
+                    if isinstance(result_container, list):
+                        results = result_container
+                    elif hasattr(result_container, 'results'):
+                        results = result_container.results
+                    else:
+                        results = [result_container]
 
                     for result in results:
                         stats.total_pages_attempted += 1
