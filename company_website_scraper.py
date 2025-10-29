@@ -974,8 +974,8 @@ class CompanyWebsiteScraper:
                     # Logging
                     verbose=self.verbose,
 
-                    # Streaming results as they arrive
-                    stream=True
+                    # Get all results at once (streaming disabled for compatibility)
+                    stream=False
                 )
 
                 # Use rich progress bar
@@ -993,8 +993,11 @@ class CompanyWebsiteScraper:
                             total=self.max_pages
                         )
 
-                        # Crawl the website (streaming results)
-                        async for result in crawler.arun(url=url, config=config):
+                        # Crawl the website and get all results
+                        result_container = await crawler.arun(url=url, config=config)
+                        results = result_container.results if hasattr(result_container, 'results') else [result_container]
+
+                        for result in results:
                             stats.total_pages_attempted += 1
 
                             if result.success:
@@ -1046,7 +1049,10 @@ class CompanyWebsiteScraper:
                         progress.update(task, completed=self.max_pages)
                 else:
                     # Non-verbose mode
-                    async for result in crawler.arun(url=url, config=config):
+                    result_container = await crawler.arun(url=url, config=config)
+                    results = result_container.results if hasattr(result_container, 'results') else [result_container]
+
+                    for result in results:
                         stats.total_pages_attempted += 1
 
                         if result.success:
